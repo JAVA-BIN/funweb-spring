@@ -59,19 +59,19 @@ $(document).ready(function() {
             <div id="s3slider">
                     <ul id="s3sliderContent">
                        <li class="s3sliderImage">
-                             <img src="../resources/images/main_img.jpg" width="971" height="282">
+                             <img src="/resources/images/main_img.jpg" width="971" height="282">
                            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper erat est. <br>
                                  Aliquam metus elit, blandit eu luctus vitae, dictum sit amet mauris. Integer ut facilisis eros. <br>
                                  Donec consectetur, velit id aliquam sagittis,</span>
                        </li>
                        <li class="s3sliderImage">
-                           <img src="./resources/images/main_img1.jpg" width="971" height="282">
+                           <img src="/resources/images/main_img1.jpg" width="971" height="282">
                                  <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper erat est. <br>
                                  Aliquam metus elit, blandit eu luctus vitae, dictum sit amet mauris. Integer ut facilisis eros. <br>
                                  Donec consectetur, velit id aliquam sagittis,</span>
                        </li>
                        <li class="s3sliderImage">
-                           <img src="./resources/images/main_img2.jpg" width="971" height="282">
+                           <img src="/resources/images/main_img2.jpg" width="971" height="282">
                                   <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam semper erat est. <br>
                                  Aliquam metus elit, blandit eu luctus vitae, dictum sit amet mauris. Integer ut facilisis eros. <br>
                                  Donec consectetur, velit id aliquam sagittis,</span>

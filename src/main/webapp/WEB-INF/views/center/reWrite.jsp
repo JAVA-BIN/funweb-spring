@@ -5,10 +5,10 @@
 <head>
 <meta charset="utf-8">
 <title>Welcome to Fun Web</title>
-<link href="./css/default.css" rel="stylesheet" type="text/css" media="all">
-<link href="./css/subpage.css" rel="stylesheet" type="text/css"  media="all">
-<link href="./css/print.css" rel="stylesheet" type="text/css"  media="print">
-<link href="./css/iphone.css" rel="stylesheet" type="text/css" media="screen">
+<link href="/resources/css/default.css" rel="stylesheet" type="text/css" media="all">
+<link href="/resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="/resources/css/print.css" rel="stylesheet" type="text/css"  media="print">
+<link href="/resources/css/iphone.css" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body>
 <div id="wrap">
@@ -21,7 +21,7 @@
 	<jsp:include page="../include/nav_center.jsp" />
 <article>    
 <h1>Notice ReWrite</h1>
-<form action="reWrite.do" method="post" name="frm">
+<form action="/board/reply" method="post" name="frm">
 <input type="hidden" name="reRef" value="${param.reRef}">
 <input type="hidden" name="reLev" value="${param.reLev}">
 <input type="hidden" name="reSeq" value="${param.reSeq}">

@@ -25,10 +25,10 @@
         <div id="logo"><a href="/"><img src="/resources/images/logo.gif" width="265" height="62" alt="Fun Web"></a></div>
         <nav id="top_menu">
             <ul>
-                <li><a href="main.do">HOME</a></li>
-                <li><a href="welcome.do">COMPANY</a></li>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/company/welcome">COMPANY</a></li>
                 <li><a href="#">SOLUTIONS</a></li>
-                <li><a href="notice.do">CUSTOMER CENTER</a></li>
+                <li><a href="/board/list">CUSTOMER CENTER</a></li>
                 <li><a href="#">CONTACT US</a></li>
             </ul>
         </nav> 

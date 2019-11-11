@@ -5,10 +5,10 @@
 <head>
 <meta charset="utf-8">
 <title>Welcome to Fun Web</title>
-<link href="./css/default.css" rel="stylesheet" type="text/css" media="all">
-<link href="./css/subpage.css" rel="stylesheet" type="text/css"  media="all">
-<link href="./css/print.css" rel="stylesheet" type="text/css"  media="print">
-<link href="./css/iphone.css" rel="stylesheet" type="text/css" media="screen">
+<link href="/resources/css/default.css" rel="stylesheet" type="text/css" media="all">
+<link href="/resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="/resources/css/print.css" rel="stylesheet" type="text/css"  media="print">
+<link href="/resources/css/iphone.css" rel="stylesheet" type="text/css" media="screen">
 </head>
 <body>
 <div id="wrap">
@@ -22,7 +22,7 @@
 <article>
     
 <h1>Notice Write</h1>
-<form action="fwrite.do" method="post" name="frm" enctype="multipart/form-data">
+<form action="/board/fileWrite" method="post" name="frm" enctype="multipart/form-data">
 <table id="notice">
 	<tr>
 		<th class="twrite">NAME</th>
@@ -61,7 +61,7 @@
 <div id="table_search">
 	<input type="submit" value="글쓰기" class="btn" />
 	<input type="reset" value="다시작성" class="btn" />
-	<input type="button" value="목록보기" class="btn" onclick="location.href='fnotice.do';"/>
+	<input type="button" value="목록보기" class="btn" onclick="location.href='/board/fileList';"/>
 </div>
 </form> 
 </article>  

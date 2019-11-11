@@ -6,6 +6,6 @@
 
    <insert id="insertMember" parameterType="MemberVO">
    		INSERT INTO jspdb.member (id, passwd, name, email, address, tel, mtel, reg_date)
-		VALUES (#{id}, #{passwd}, #{name}, #{email}, #{address}, #{tel}, #{mtel}, #{regDate})
+		VALUES (#{id}, #{passwd}, #{name}, #{email}, #{address}, #{tel}, #{mtel}, current_timestamp)
    </insert>
 </mapper>

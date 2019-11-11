@@ -5,10 +5,10 @@
 <head>
 <meta charset="utf-8">
 <title>Welcome to Fun Web</title>
-<link href="./css/default.css" rel="stylesheet" type="text/css" media="all">
-<link href="./css/subpage.css" rel="stylesheet" type="text/css"  media="all">
-<link href="./css/print.css" rel="stylesheet" type="text/css"  media="print">
-<link href="./css/iphone.css" rel="stylesheet" type="text/css" media="screen">
+<link href="/resources/css/default.css" rel="stylesheet" type="text/css" media="all">
+<link href="/resources/css/subpage.css" rel="stylesheet" type="text/css"  media="all">
+<link href="/resources/css/print.css" rel="stylesheet" type="text/css"  media="print">
+<link href="/resources/css/iphone.css" rel="stylesheet" type="text/css" media="screen">
 </head>
 
 <body>
@@ -24,7 +24,7 @@
 <article>
     
 <h1>Notice Write</h1>
-<form action="write.do" method="post" name="frm">
+<form action="/board/write" method="post" name="frm">
 <table id="notice">
 
 	<tr>
