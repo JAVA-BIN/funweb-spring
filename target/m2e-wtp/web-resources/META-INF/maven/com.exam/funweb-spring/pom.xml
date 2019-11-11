@@ -16,7 +16,19 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<dependencies>
-	
+	 
+		<!-- commons-fileupload -->
+		 <dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version>
+		</dependency> 
+		<!--thumbnailator -->
+		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.8</version>
+		</dependency>
 		<!-- jackson-databind 컨트롤러 리턴타입에서 VO 또는 List를 사용가능하게
 		Gson 라이브러리와 동일한 기능 제공하여 JSON으로 응답주게 됨. -->
 		<dependency>

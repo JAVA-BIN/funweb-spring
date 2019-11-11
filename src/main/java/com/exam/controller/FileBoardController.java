@@ -1,23 +1,45 @@
 package com.exam.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.exam.domain.AttachVO;
 import com.exam.domain.BoardVO;
 import com.exam.service.AttachService;
 import com.exam.service.BoardService;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @RequestMapping("/board/*")
@@ -86,14 +108,128 @@ public class FileBoardController {
 		return "center/fnotice";
 	} // fileList
 	
-	@GetMapping("fileWrite")
+	@GetMapping("/fileWrite")
 	public String fileWrite (HttpSession session) {
 		String id = (String) session.getAttribute("id");
 		if (id == null) {
 			return "redirect:/board/fileList";
 		}
 		return "center/fwrite";
+	} // fileWrite get
+	
+	@PostMapping("/fileWrite")
+	public String fileWrite(MultipartFile[] files, BoardVO boardVO, HttpServletRequest request) throws Exception {
+		if (files != null) {
+			log.info("file.length : " + files.length);
+		}
+		// IP주소 값 저장
+		boardVO.setIp(request.getRemoteAddr());
+		// 게시글 번호 생성하는 메소드 호출
+		int num = boardService.nextBoardNum();
+		// 생성된 번호를 자바빈 글번호 필드에 설정
+		boardVO.setNum(num);
+		boardVO.setReadcount(0); // 조회수 0
+		// 주글일 경우
+		boardVO.setReRef(num); // [글그룹번호]는 글번호와 동일함
+		boardVO.setReLev(0); // [들여쓰기 레벨] 0
+		boardVO.setReSeq(0); // [글그룹 안에서의 순서] 0
+		// ======================================= boardVO 설정 완료
+		// ======================================= upload 시작
+		ServletContext application = request.getServletContext();
+		String realPath = application.getRealPath("/resources/upload");
+		log.info("realPath : " +realPath);
+		// 폴더 동적 생성하기 /resources/upload/2019/11/11
+		File uploadPath = new File(realPath, getFolder());
+		log.info("uploadPath : " + uploadPath);
+		if (!uploadPath.exists()) {
+			uploadPath.mkdirs(); // 업로드할 폴더 생성
+		}
+		List<AttachVO> attachList = new ArrayList<AttachVO>();
+		for (MultipartFile multipartFile : files) {
+			log.info("파일명: " + multipartFile.getOriginalFilename());
+			log.info("파일크기: " + multipartFile.getSize());
+			if (multipartFile.isEmpty()) {
+				continue;
+			}
+			String uploadFileName = multipartFile.getOriginalFilename();
+			UUID uuid = UUID.randomUUID();
+			uploadFileName = uuid.toString() + "_" + uploadFileName;
+			log.info("최종 업로드 파일명: " + uploadFileName);
+			File saveFile = new File(uploadPath, uploadFileName);
+			multipartFile.transferTo(saveFile); // 업로드 수행
+			// ===================================
+			// attach 테이블에 insert할 AttachVO를 리스트로 준비하기
+			AttachVO attachVO = new AttachVO();
+			attachVO.setBno(boardVO.getNum());
+			attachVO.setUuid(uuid.toString());
+			attachVO.setUploadpath(getFolder());
+			attachVO.setFilename(multipartFile.getOriginalFilename());
+			if (isImageType(saveFile)) { // Image file type
+				// 섬네일 이미지 생성하기
+				File thumbnailFile = new File(uploadPath, "s_" + uploadFileName);
+				try (FileOutputStream fos = new FileOutputStream(thumbnailFile)) {
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(), fos, 100, 100);
+				}
+				attachVO.setFiletype("I");
+			} else { // Other file type
+				attachVO.setFiletype("O");
+			}
+			attachList.add(attachVO);
+		} // for
+		// table insert : board table & attach table transaction으로 insert
+		boardService.insertBoardAndAttaches(boardVO, attachList);
+		return "redirect:/board/fileList";
+	} // fileWrite post
+	
+	private boolean isImageType(File file) throws IOException{
+		boolean isImageType = false;
+		String contentType = Files.probeContentType(file.toPath());
+		log.info("contentType : " + contentType);
+		if (contentType != null) {
+			isImageType = contentType.startsWith("image");
+		} else {
+			isImageType = false;
+		}
+		return isImageType;
 	}
 	
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		Date date = new Date();
+		String str = sdf.format(date);
+		return str; // ex) "2019/11/11"
+	} 
+	
+	@GetMapping("/fileContent")
+	public String fileContent(int num, @ModelAttribute("pageNum") String pageNum, Model model) {
+		// 조회수 1증가시키는 메소드 호출
+		boardService.updateReadcount(num);
+		// 글번호에 해당하는 레코드 한개 가져오기
+		BoardVO boardVO = boardService.getBoard(num);
+		List<AttachVO> attachList = attachService.getAttaches(num);
+		// request 영역객체에 저장
+		model.addAttribute("board", boardVO);
+		model.addAttribute("attachList", attachList);
+		return "center/fcontent";
+	}
+	
+	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource> download(String fileName, HttpServletRequest request) throws Exception {
+		// 다운로드할 경로 구하기
+		ServletContext application = request.getServletContext();
+		String realPath = application.getRealPath("/resources/upload");
+		Resource resource = new FileSystemResource(realPath + "/" + fileName);
+		if (!resource.exists()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+		}
+		String resourceName = resource.getFilename();
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_") + 1);
+		HttpHeaders headers = new HttpHeaders();
+		String downloadName = "";
+		downloadName = new String(resourceOriginalName.getBytes("UTF-8"));
+		headers.add("Content-Disposition", "attachment; filename=" + downloadName);
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	} // download method
 	
 }

@@ -34,6 +34,13 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 		
+	<multipart-config>
+		<location>C:\\upload\\temp</location>
+		<max-file-size>20971520</max-file-size> <!--  한파일당 최대크기(바이트 기준) 20MB = 1024*1024*20 -->
+		<max-request-size>41943040</max-request-size><!-- 모든파일 최대크기(바이트 기준) 40MB = 1024*1024*40 -->
+	</multipart-config>	
+		
+		 
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>

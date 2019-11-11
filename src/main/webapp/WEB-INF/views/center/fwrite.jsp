@@ -25,12 +25,6 @@
 <form action="/board/fileWrite" method="post" name="frm" enctype="multipart/form-data">
 <table id="notice">
 	<tr>
-		<th class="twrite">NAME</th>
-	<td class="left" width="300">
-	<input type="text" name="username">
-	</td>
-	</tr>
-	<tr>
 		<th class="twrite">ID</th>
 	<td class="left" width="300">
 	<input type="text" name="username" value="${id}" readonly>
@@ -46,7 +40,7 @@
   		<th class="twrite">FILE</th>
     	<td class="left">
     		<div id="file_container">
-   			 	<input type="file" name="filename">
+   			 	<input type="file" name="files" multiple>
     		</div>
     		<button type="button" onclick="addFileElement(); ">파일 추가</button>
     	</td>
@@ -76,7 +70,7 @@ function addFileElement() {
 		return;
 	}
 	// div요소에 file타입 input요소를 추가하기
-	var input = '<br><input type="file" name="filename'+num+'">';
+	var input = '<br><input type="file" name="filename" multiple>';
 	num++; // 다음번 추가를 위해 값을 1 증가
 	// id속성값이 file_container인 div요소의 참조 구하기
 	var fileContainer = document.getElementById('file_container');
